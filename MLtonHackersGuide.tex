@@ -1,12 +1,22 @@
 \documentclass{article}
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=0.75in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyvrb}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
 
 \title{MLton Hacker's Guide (Do Panic)}
-\author{Vasanth, Bhushan, Nathan}
+\author{Vasanth Subramanian, Bhushan Shitole, Nathan Burgers}
 \date{}
+
+\DefineShortVerb{\|}
+\pagestyle{fancy}
 
 \begin{document}
 \maketitle
+\tableofcontents
+\clearpage
+
 \section{Roadmap}
 \begin{itemize}
 \item Figure out the part of the grant that we are tackling
@@ -14,4 +24,69 @@
 \item Write documentation for how to proceed hacking on MLton (This document).
 \end{itemize}
 
+\section{Directory Structure}
+\begin{description}
+\item |basis-library/| \\
+  This directory contains the version of the Standard-ML Basis Library that ships with MLton.
+
+\item |benchmark/| \\
+  Contains the performance benchmarks used for MLton's own performance   tests.
+
+\item |bin/| \\
+  A collection of shell scripts that aid in compilation
+
+\item |doc/| \\
+  Documentation about the internals of MLton. Contains the old Hacker's Guide and other miscellaneous documentation.
+
+\item |mlton/| \\
+  The source for the compiler proper. Most of the work you will be doing will take place inside this directory.
+\begin{description}
+\item |ast/| \\
+  Algebraic Data Types representing the Abstract 
+Syntax Tree that MLton creates after parsing the text of a Standard-ML program. This directory also contains files with meta-data on the various primitive data types, such as the size of the primitive |int| type provided in the Basis.
+\item |atoms/| \\
+  These are the atomic symbols used by MLton in many intermediate representations. 
+\item |backend/| \\
+  Lower-level intermediate representations and optimization passes. For instance, the RSSA and Machine intermediate representations, and the Register Allocation pass are located here.
+\item |closure-convert/| \\
+  Sources for the Closer Conversion optimization pass.
+\item |cm/| \\
+  The Parser for the deprecated Core-ML build system. This directory is kept for backwards-compatibility. Prefer to use ML-Build (|.mlb|) files to structure Standard-ML programs.
+\item |codegen/| \\
+  The lowest level of the compiler. This directory contains the passes that take code from the |Machine| intermediate representation to either: bytecode, x86 assembly, x86-64 assembly, or C. 
+\item |control/| \\
+  Contains systems to \emph{control} the compiler. Enables and runs various optimization passes.
+\item |core-ml/| \\
+  The Abstract Syntax Tree of the Core-ML language. This intermediate representation conforms to the specification for Core-ML in The Definition of Standard-ML. Core-ML is essentially Standard-ML without the module system.
+\item |defunctorize/| \\
+  Defunctorization is a compiler pass that converts all invocations of Functors into Structures. 
+\item |elaborate/| \\
+  \textbf{Nate: I do not fully understand this.}
+\item |front-end/| \\
+  Contains code to Parse and translate ML-Build (|.mlb|) files into a Compilation Unit.
+\item |main/| \\
+  Exactly what it sounds like, |main/| is the entry point for the   MLton compiler.
+\item |match-compile/| \\
+  Contains the intermediate pass that compiles Pattern Matching.
+\item |ssa/| \\
+  This directory contains the definition of the Static Single Assignment 1 and 2 intermediate representations, as well as the optimization passes that run on them. This is where the bulk of optimization takes place in MLton. Static Single Assignment is a typical canonical form for optimization in compilers, and a variant of it is used, for instance, as the basis for LLVM.
+\item |xml/| \\
+  \textbf{To be continued...}
+\end{description}
+
+\item |runtime/| \\
+  
+
+\end{description}
+
+\section{Intermediate Representations}
+
+\section{Backend}
+
+\section{Runtime}
+
 \end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

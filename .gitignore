@@ -1,4 +1,6 @@
 auto/
+build/
 *.aux
 *.log
 *.pdf
+*.toc
