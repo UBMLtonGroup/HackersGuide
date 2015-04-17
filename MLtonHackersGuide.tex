@@ -110,10 +110,11 @@ Syntax Tree that MLton creates after parsing the text of a Standard-ML program. 
 
 The MultiMLton runtime creates a pthread\footnote{Pthreads are also
   known as ``OS-level threads'' or ``native threads.''} for each
-SML-level thread. These SML green threads are multiplexed on top of
-the pthreads. The reason for this added complexity is that the runtime
-is capable of context switching between green threads \textit{faster}
-than the OS is capable of switching between pthreads.
+processor on the system.  SML-level/green threads are multiplexed on
+top of the pthreads (or ``virtual processors''). The reason for this
+added complexity is that the runtime is capable of context switching
+between green threads \textit{faster} than the OS is capable of
+switching between pthreads.
 
 \subsubsection{Implementation}
 
