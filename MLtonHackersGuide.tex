@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[margin=0.75in]{geometry}
+\usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyvrb}
 \usepackage{fancyhdr}
@@ -101,6 +102,44 @@ Syntax Tree that MLton creates after parsing the text of a Standard-ML program. 
 \section{Backend}
 
 \section{Runtime}
+
+
+
+\section{MultiMLton}
+\subsection{Threading}
+
+The MultiMLton runtime creates a pthread\footnote{Pthreads are also
+  known as ``OS-level threads'' or ``native threads.''} for each
+processor on the system.  SML-level/green threads are multiplexed on
+top of the pthreads (or ``virtual processors''). The reason for this
+added complexity is that the runtime is capable of context switching
+between green threads \textit{faster} than the OS is capable of
+switching between pthreads.
+
+\subsubsection{Implementation}
+
+Generally, MLton/MultiMLton compiles programs by repeatedly
+translating from intermediate language\footnote{The Intermediate
+  Languages used by MLton are described in more detail at
+  \url{http://mlton.org/IntermediateLanguage}} to intermediate
+language, beginning with the abstract syntax tree language.  The
+result of the final intermediate language, \texttt{Machine}, is passed
+as input to the \texttt{Codegen} stage.  The \texttt{C-Codegen}
+functor\footnote{C-Codegen is defined in
+  \texttt{mlton/codegen/c-codegen/c-codegen.fun}.} defines
+\texttt{declareMain}, which injects the definition of the C program's
+\texttt{main} function.  This \texttt{main} function simply calls the
+\texttt{MLton\_main} function.
+
+To understand where this \texttt{MLton\_main} function comes from, we
+must look at \texttt{include/c-main.h}. This header file
+\texttt{\#define}s a macro called \texttt{MLtonMain} that expands to
+define a number of functions. One of these functions is named
+\texttt{MLton\_main}.
+
+\textbf{TODO: expand on \texttt{MLton\_main}}
+
+\textbf{TODO: summarize \texttt{basis-library/mlton/thread.sml}}
 
 \end{document}
 %%% Local Variables:
