@@ -5,6 +5,8 @@
 \usepackage{fancyvrb}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
+\usepackage{listings}
+\usepackage{url}
 
 \title{MLton Hacker's Guide (Do Panic)}
 \author{Vasanth Subramanian, Bhushan Shitole, Nathan Burgers}
@@ -103,7 +105,46 @@ Syntax Tree that MLton creates after parsing the text of a Standard-ML program. 
 
 \section{Runtime}
 
+\subsection{Execution Model}
 
+SML programs rely heavily on recursion. If each recursive call was
+translated to a C function call, a stack overflow could occur
+easily. To account for this common use case, MLton creates a stack in
+the C heap and manage it in the runtime.
+
+See the ``Execution Model'' section of Andrew Leibig's master's thesis
+~\cite{Leibig13} for a good review of the execution model.
+
+\subsection{Trampolining}
+
+In MLton or MultiMLton, you may encounter a section of code in the
+\texttt{MLton\_main()} function in \texttt{include/c-main.h} that looks
+like the following code listing.
+
+\lstset{language=C}
+\begin{lstlisting}
+        /* Trampoline */
+        while (1) {
+                cont=(*(struct cont(*)(void))cont.nextChunk)();
+                /* (The above line is repeated 7 more times) */
+        }      
+\end{lstlisting}
+
+Trampolining is used to implement the execution model described
+above.  When a MLton-compiled program begins, after setting up the
+runtime, the trampoline loop begins executing.  It is clear that this
+loop will not cause the stack to grow, but it is not so clear how it
+actually causes the program to execute.
+
+\textbf{TODO: explain how the trampoline executes ML code}
+
+See the ``Trampolining'' section of Andrew Leibig's master's thesis for more details ~\cite{Leibig13}.
+
+\section{Foreign Function Interface}
+
+Helpful documentation of FFI functions, such as \texttt{\_import} can
+be found at the official MLton site's
+\href{ForeignFunctionInterfaceSyntax page}{http://mlton.org/ForeignFunctionInterfaceSyntax}.
 
 \section{MultiMLton}
 \subsection{Threading}
@@ -140,6 +181,9 @@ define a number of functions. One of these functions is named
 \textbf{TODO: expand on \texttt{MLton\_main}}
 
 \textbf{TODO: summarize \texttt{basis-library/mlton/thread.sml}}
+
+\bibliography{References}{}
+\bibliographystyle{plain}
 
 \end{document}
 %%% Local Variables:
